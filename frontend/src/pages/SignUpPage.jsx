@@ -1,39 +1,35 @@
-import React from "react";
+import React, { useState } from 'react';
+import { axiosInstance } from '../lib/axios';
+import useAuthStore from '../store/useAuthStore';
 
-const SignUpPage = () => {
-  const [showPassword, setShowPassword] = React.useState(false);
-  const [formData, setFormData] = React.useState({
-    fullname: "",
-    email: "",
-    password: "",
+const SignupPage = () => {
+  const [formData, setFormData] = useState({
+    fullName: '',
+    email: '',
+    password: '',
   });
+  const { signup } = useAuthStore();
 
-  const { signup, isSigningUp } = useAuthStore();
-  const validateForm = () => {};
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    try {
+      await signup(formData); // Connect to backend
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
-    <div className="nim-h-screen grid lg:grid-cols-2">
-      <div className="flex flex-col justify-center items-center sm:p-12">
-        <div className="w-full max-w-md space-y-8">
-          <div className="text-center mb-8">
-            <div className="flex flex-col items-center gap-2 group">
-              <div className="size-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                <MessageSquare className="size-6 text-primary" />
-              </div>
-              <h1 className="text-2xl font-bold mt-2">Create Account</h1>
-              <p className="text-base-content/60">
-                Get started with your free account
-              </p>
-            </div>
-          </div>
-          <form action=""></form>
-        </div>
-      </div>
+    <div className="min-h-screen grid place-items-center">
+      <form onSubmit={handleSubmit}>
+        <input 
+          type="text" 
+          placeholder="Full Name"
+          onChange={(e) => setFormData({...formData, fullName: e.target.value})}
+        />
+        {/* Add email/password fields similarly */}
+        <button type="submit">Sign Up</button>
+      </form>
     </div>
   );
 };
-
-export default SignUpPage;
